@@ -3,3 +3,14 @@ __pycache__/
 *.pyc
 *.tmp
 *.part
+
+# assembled checkout and downloaded assets
+vendor/
+assets/
+artifacts/
+runs/
+logs/
+.vch/
+
+# local result bundles produced when push permission is unavailable
+results-*.tar.gz

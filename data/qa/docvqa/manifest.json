@@ -1,0 +1,15 @@
+{
+  "dataset": "lmms-lab-encoder/DocVQA",
+  "revision": "539088ef8a8ada01ac8e2e6d4e372586748a265e",
+  "folder": "DocVQA",
+  "split": "validation",
+  "num_rows_in_split": 10537,
+  "shards": {
+    "validation-00000-of-00006.parquet": "a31507f0b700ac64f3ead52057c5dc3ccfb0baadcc62bc0d19d17159f080a4d8",
+    "validation-00001-of-00006.parquet": "ce63ba45f11bfb4e17362f9c073984b4c6c84a0e966ba3d33a86fa285a1fb3dc",
+    "validation-00002-of-00006.parquet": "2d580a39996ad05226ad462f2d31bad0df02f0f47f46263d96ad8df584a5667b",
+    "validation-00003-of-00006.parquet": "588a587567d1548a174b83b160132d97eb2b12a7d57374675d3c45b431403354",
+    "validation-00004-of-00006.parquet": "b43b8aa3e28a1b0f8728243fdf776b798a684b5baafb27d6a734edbbe3983302",
+    "validation-00005-of-00006.parquet": "5bba6d5f7b8e6ee0b64df2e4c2885f93cd759c732998e4d6f9b86ce4c690fcf2"
+  }
+}

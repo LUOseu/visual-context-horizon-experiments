@@ -2,6 +2,8 @@
 
 VelaDraft 原生 vLLM 实验档案。比较 Qwen3-VL-8B-Instruct 的 AR 和空间 DFlash B8 在不同视觉预算、自然生成长度下的延迟与任务质量。
 
+在 GPU 机上执行实验请直接按 [AGENT.md](AGENT.md) 操作：`setup.sh` → `download_assets.sh` → `prepare.sh` → `run_stage.sh <stage>` → `pack_and_upload.sh <stage>`。
+
 | 阶段 | 状态 | 入口 |
 | --- | --- | --- |
 | GPU smoke | 256 和 1280 两档通过，各 6 对请求 | [报告](results/smoke/REPORT.md) · [汇总](results/smoke/summary.csv) · [原始观测](results/smoke/native/) |

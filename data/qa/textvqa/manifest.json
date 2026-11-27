@@ -1,0 +1,12 @@
+{
+  "dataset": "lmms-lab-encoder/textvqa",
+  "revision": "9c0699cd19768ac5ab97568f6b3cbac4c0062884",
+  "folder": "data",
+  "split": "validation",
+  "num_rows_in_split": 5000,
+  "shards": {
+    "validation-00000-of-00003.parquet": "491649b5b8add2c5bde13a1e36707002fcd11898699255d65e2e568ac4fbddff",
+    "validation-00001-of-00003.parquet": "909ad12a378217431548a7f4b66fda163a6def9d21e70844c96449e64206c2dd",
+    "validation-00002-of-00003.parquet": "a770d03ec95fef58def04cda949d97669b7666caaf174af927856d75684e6fe6"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "dataset": "lmms-lab-encoder/ChartQA",
+  "revision": "9e63b7df1592a1c2158e735cc1725454aef0d6d9",
+  "folder": "data",
+  "split": "test",
+  "num_rows_in_split": 2500,
+  "shards": {
+    "test-00000-of-00001.parquet": "165263505f2998aba65d819b44be832edecd92d676fee2c030645f784cd55d06"
+  }
+}
