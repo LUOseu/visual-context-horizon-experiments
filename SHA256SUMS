@@ -1,7 +1,7 @@
 4fb6fcdcabcf5180e73dd242a98b082d4c64c0fce40990dedf70fe647adad8a5  ./.gitattributes
 7a623c8fe7bc1be66d9fed95ff6b8de40a7bee5ad679a46fd2fd16df5d81f48b  ./.gitignore
 a226a2ec962192d8f2789a655ed5135668d68b049fcb80871cc50c66967b92ba  ./README.md
-dfb43907f0942a63765aa8a87c85a8b63ac06b88b5831986fcad07ff83465d23  ./STATUS.md
+46c3f7a2a70f696f6a6256ab8d09cadd060ac5ab2db2dd5af54d8b7296539abb  ./STATUS.md
 a3ebdc84ec9c4e9825fec9fecd04e8167cadc75a3690a965e297aaf346d54d70  ./methods/native-eval.patch
 cdbb13b1d1f46c1a8feb2541fa8e56803ad8a7832fedb3a69b1d798388de8e26  ./methods/research/visual_context_horizon/README.md
 a2ea1fa4dfa01ed433aebb83afd222f43893c927b417bfb81dd6e534ea69d66d  ./methods/research/visual_context_horizon/REPORT.md
@@ -21,6 +21,8 @@ fc46579176f3711ca5d1083b69d0260d5b53997f49f78fce70f7ce95df218ad5  ./methods/rese
 ad0f7736fafd37b8cced6b8d658896e6a0288400cdaf84090f629a9ad58029bd  ./provenance/runtime_manifest.json
 c228950484b667e0d5249d542c3044fe89d40b55a25dcd71eea2fa474e415dec  ./provenance/runtime_versions.json
 31eda5f3fb12fefe886cf4aba878e5c8e392745bd079ced472aac992e470398d  ./provenance/source.json
+cdb9969b74a90a16a44183b0e23fc0dcc6a85e9ef47890d9e7c2269b8619f52d  ./results/pilot-checkpoints/v256/native-evidence.tar.gz
+c17c8efbaf7506cf8cc25724951f14a62ffef866ea0908c6badfa92acb471bd4  ./results/pilot-checkpoints/v256/summary.json
 e01f8b69addbf27f9b6b63d4a9de4709f6c3620c8d5d5acf5a4162e15c578c46  ./results/smoke/REPORT.md
 d9ebd505959b73360115feec15c86188c725496d2537cf3b1845371086203793  ./results/smoke/break_even.json
 3825dd7c276ed64e1c57939026c9151727d44dcd2aabff1dcbbb211fd1c181e4  ./results/smoke/logs/smoke-v1.log
