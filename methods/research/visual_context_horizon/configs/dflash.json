@@ -1,0 +1,21 @@
+{
+  "target": "Qwen/Qwen3-VL-8B-Instruct",
+  "target_revision": "0c351dd01ed87e9c1b53cbc748cba10e6187ff3b",
+  "drafter": "khazic/veladraft-qwen3vl8b-200k-dflash",
+  "drafter_revision": "37a5eb63b12d851fe6114f3aeb87dbc7174dec3d",
+  "checkpoint_sha256": "86b40b550dae022d8f8669302022c50aaf36441c6f36c1f0adde6628f5c6135c",
+  "vllm": "0.22.1",
+  "budgets": [256, 512, 768, 1024, 1280],
+  "horizons": [32, 64, 128, 256, 512],
+  "pixel_floor_ratio": 0.85,
+  "target_patch_size": 16,
+  "target_spatial_merge_size": 2,
+  "max_new_tokens": 512,
+  "max_model_len": 8192,
+  "speculative_tokens": 7,
+  "repeats": 3,
+  "sample_seed": 42,
+  "pilot_per_task": 24,
+  "full_per_task": 100,
+  "long_form_prompt": "Describe this image in detail. Describe the scene, the visible objects and people, their attributes, actions, spatial relationships, and the background. Ground your description in visible evidence and avoid speculation."
+}

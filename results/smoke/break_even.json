@@ -1,0 +1,78 @@
+[
+  {
+    "task": "chartqa",
+    "budget": 256,
+    "horizon": null,
+    "status": "no_eligible_samples",
+    "measured_horizons": []
+  },
+  {
+    "task": "chartqa",
+    "budget": 1280,
+    "horizon": null,
+    "status": "no_eligible_samples",
+    "measured_horizons": []
+  },
+  {
+    "task": "long_form",
+    "budget": 256,
+    "horizon": 32,
+    "status": "observed",
+    "measured_horizons": [
+      32,
+      64,
+      128,
+      256
+    ]
+  },
+  {
+    "task": "long_form",
+    "budget": 1280,
+    "horizon": 32,
+    "status": "observed",
+    "measured_horizons": [
+      32,
+      64,
+      128,
+      256
+    ]
+  },
+  {
+    "task": "textvqa",
+    "budget": 256,
+    "horizon": null,
+    "status": "no_eligible_samples",
+    "measured_horizons": []
+  },
+  {
+    "task": "textvqa",
+    "budget": 1280,
+    "horizon": null,
+    "status": "no_eligible_samples",
+    "measured_horizons": []
+  },
+  {
+    "task": "all",
+    "budget": 256,
+    "horizon": 32,
+    "status": "observed",
+    "measured_horizons": [
+      32,
+      64,
+      128,
+      256
+    ]
+  },
+  {
+    "task": "all",
+    "budget": 1280,
+    "horizon": 32,
+    "status": "observed",
+    "measured_horizons": [
+      32,
+      64,
+      128,
+      256
+    ]
+  }
+]

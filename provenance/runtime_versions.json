@@ -1,0 +1,11 @@
+{
+  "platform": "Linux-4.19.90-2107.6.0.0192.8.oe1.bclinux.x86_64-x86_64-with-glibc2.35",
+  "python": "3.12.3",
+  "torch": "2.11.0+cu130",
+  "torch_cuda": "13.0",
+  "transformers": "5.11.0",
+  "vllm": "0.22.1",
+  "torch_installed_from": "/root/visual_context_horizon/runtime/torch/__init__.py",
+  "vllm_installed_from": "/root/visual_context_horizon/runtime/vllm/__init__.py",
+  "cuda_available": true
+}

@@ -1,0 +1,256 @@
+diff --git a/vlm_dflash/eval/native.py b/vlm_dflash/eval/native.py
+index 536b1f8..3035b49 100644
+--- a/vlm_dflash/eval/native.py
++++ b/vlm_dflash/eval/native.py
+@@ -63,6 +63,12 @@ def engine_args(plan,arm):
+         generation_config='vllm',disable_log_stats=True,
+         mm_processor_kwargs=dict(min_pixels=plan['min_pixels'],max_pixels=plan['max_pixels']),
+         worker_extension_cls='vlm_dflash.eval.native_runtime.WorkerMetadata')
++    if plan.get('visual_context_trace') == 'diagnostic':
++        args['disable_log_stats']=False
++        args['profiler_config'] = dict(
++            profiler='torch', torch_profiler_dir=plan['diagnostic_profile_dir'],
++            torch_profiler_with_stack=False, torch_profiler_with_memory=True,
++            torch_profiler_dump_cuda_time_total=False, max_iterations=80)
+     if arm=='sd':
+         size=plan['speculative_tokens']+1
+         # PIECEWISE (default, the Qwen3-VL-8B protocol) or the engine-native FULL_AND_PIECEWISE
+@@ -227,9 +233,30 @@ def make_plan(args):
+         dist=importlib.metadata.distribution('vllm')
+         if dist.version!='0.22.1':raise ValueError('Native protocol pins vLLM0.22.1')
+         for name in ('vllm/engine/arg_utils.py','vllm/model_executor/models/qwen3_dflash.py','vllm/v1/spec_decode/dflash.py','vllm/v1/sample/rejection_sampler.py'):
+-            path=Path(dist.locate_file(name));plan['files'][str(path.resolve())]=digest(path)
++            path=Path(dist.locate_file(name)).resolve()
++            actual = digest(path)
++            existing = plan['files'].setdefault(str(path), actual)
++            if existing != actual:
++                raise ValueError('Installed runtime source differs from adapter pin: '+str(path))
+     except importlib.metadata.PackageNotFoundError:
+         if not args.dry_run:raise ValueError('Install vLLM0.22.1 in a separate CUDA runtime environment') from None
++    trace = getattr(args, 'visual_context_trace', None)
++    if trace:
++        from research.visual_context_horizon import collect_runtime_trace
++        trace_source = Path(collect_runtime_trace.__file__).resolve()
++        plan['files'][str(trace_source)] = digest(trace_source)
++        plan['visual_context_trace'] = trace
++        plan['formal_timing'] = getattr(args, 'formal_timing', False)
++        if getattr(args, 'short_reference_and_warmup', False):
++            if any(len(item['questions']) != 1 for item in plan['sessions']):
++                raise ValueError('Short canonical reference is supported for single-turn requests only')
++            long_form = [item['id'] for item in plan['sessions'] if item.get('category') == 'long_form']
++            plan['short_reference_and_warmup'] = dict(reference_cap=1, warmup_cap=16, long_warmup_ids=long_form[:2])
++        if getattr(args, 'compile_cache', None):
++            plan['compile_cache'] = str(Path(args.compile_cache).resolve())
++        if trace == 'diagnostic':
++            plan['diagnostic_profile_dir'] = str(Path(args.out).resolve().with_suffix('.evidence') / 'profiles')
++        plan['target_files'] = [str(path.resolve()) for path in sorted(Path(plan['target']).iterdir()) if path.is_file()]
+     verify_plan(plan)
+     return plan
+ 
+@@ -281,18 +308,23 @@ def run(args):
+     result=dict(format=FORMAT,status='failed',paper_ready=False,quality_evaluation_required=True,evidence=str(evidence))
+     try:
+         # Reserve before expensive hashing so coordinated jobs see the lease immediately.
+-        with GPULease(resolve_gpus(args),evidence/'resources.jsonl') as lease:
++        guard = GPULease(resolve_gpus(args),evidence/'resources.jsonl')
++        if getattr(args, 'visual_context_trace', None):
++            guard.record_memory = True
++        with guard as lease:
+             plan=make_plan(args)
+             verify_preservation(plan)
+             uuids=getattr(lease,'uuids',None) or [lease.uuid]
+             plan['gpu_uuid']=lease.uuid;plan['gpu_uuids']=uuids;save(evidence/'plan.json',plan)
+             plan_path=evidence/'plan.json';plan_sha=digest(plan_path)
+             for stage in ('reference',*stage_order(args.repeats)):
++                arm = 'sd' if stage.startswith('sd') else 'ar'
++                cache = Path(plan['compile_cache']) / arm if plan.get('compile_cache') else evidence / stage
+                 env=dict(os.environ,CUDA_DEVICE_ORDER='PCI_BUS_ID',CUDA_VISIBLE_DEVICES=','.join(map(str,plan['gpus'])),
+                     VELADRAFT_NATIVE_PLAN=str(plan_path),VELADRAFT_NATIVE_PLAN_SHA256=plan_sha,
+-                    VELADRAFT_NATIVE_ARM='sd' if stage.startswith('sd') else 'ar',
++                    VELADRAFT_NATIVE_ARM=arm,
+                     VLLM_WORKER_MULTIPROC_METHOD='spawn',VLLM_BATCH_INVARIANT='0',HF_HUB_OFFLINE='1',TRANSFORMERS_OFFLINE='1',
+-                    VLLM_CACHE_ROOT=str(evidence/stage/'cache'),TORCHINDUCTOR_CACHE_DIR=str(evidence/stage/'inductor'),
++                    VLLM_CACHE_ROOT=str(cache/'cache'),TORCHINDUCTOR_CACHE_DIR=str(cache/'inductor'),
+                     OMP_NUM_THREADS='1',MKL_NUM_THREADS='1',TOKENIZERS_PARALLELISM='false',PYTHONDONTWRITEBYTECODE='1')
+                 repo=Path(__file__).resolve().parents[2]
+                 env['PYTHONPATH']=os.pathsep.join((str(Path(__file__).parent/'native_bootstrap'),str(repo)))
+@@ -300,6 +332,13 @@ def run(args):
+                 with (evidence/(stage+'.log')).open('x') as log:
+                     completed=subprocess.run(command,env=env,cwd=repo,stdin=subprocess.DEVNULL,stdout=log,stderr=subprocess.STDOUT)
+                 if completed.returncode:raise ValueError('Native stage failed: '+stage+'; preserved raw/logs')
++                if plan.get('formal_timing') and stage != 'reference':
++                    log_text = (evidence/(stage+'.log')).read_text()
++                    _, began, after = log_text.partition('VCH_PHASE_BEGIN timed')
++                    timed_log, ended, _ = after.partition('VCH_PHASE_END timed')
++                    if not began or not ended or 'Triton kernel JIT compilation during inference:' in timed_log:
++                        raise ValueError('Missing timing markers or timed Triton JIT detected in '+stage+
++                                         '; inspect log and repeat with --full-warmup')
+                 if hasattr(lease,'boundary'):lease.boundary()
+         reference=json.loads((evidence/'reference.json').read_text());reports=[json.loads((evidence/(s+'.json')).read_text()) for s in stage_order(args.repeats)]
+         windows=[(min(r['began_wall_ns'] for r in rows),max(r['ended_wall_ns'] for r in rows))
+diff --git a/vlm_dflash/eval/native_resources.py b/vlm_dflash/eval/native_resources.py
+index d169f27..2f2301e 100644
+--- a/vlm_dflash/eval/native_resources.py
++++ b/vlm_dflash/eval/native_resources.py
+@@ -98,6 +98,8 @@ class GPULease:
+                 row['ended_wall_ns']=time.time_ns();self.rows.append(row)
+                 with self.path.open('a') as stream:stream.write(json.dumps(row)+'\n')
+                 return row
++            if getattr(self, 'record_memory', False):
++                row['per_gpu_memory_mib'] = {u: int(query('-i', u, '--query-gpu=memory.used')) for u in uuids}
+             pids={int(v) for uuid in uuids for v in query('-i',uuid,'--query-compute-apps=pid').splitlines() if v.strip()}
+             live=descendants();now=time.monotonic()
+             for pid in pids & live:self.recent_own_gpu_pids[pid]=now
+diff --git a/vlm_dflash/eval/native_runtime.py b/vlm_dflash/eval/native_runtime.py
+index 404b6db..6f97f31 100644
+--- a/vlm_dflash/eval/native_runtime.py
++++ b/vlm_dflash/eval/native_runtime.py
+@@ -29,6 +29,35 @@ def numeric_state():
+ 
+ class WorkerMetadata:
+     """Read-only public collective_rpc extension, with no sampler installation."""
++    def vch_enable_stage_timers(self):
++        import torch
++        from research.visual_context_horizon.collect_runtime_trace import WorkerStageTimers
++        self._vch_stage_timers = WorkerStageTimers(self.model_runner, torch)
++        self._vch_stage_timers.attach()
++
++    def vch_disable_stage_timers(self):
++        self._vch_stage_timers.detach()
++
++    def vch_reset_cuda_peak(self):
++        import torch
++        torch.cuda.synchronize()
++        torch.cuda.reset_peak_memory_stats()
++        if hasattr(self, '_vch_stage_timers'):
++            self._vch_stage_timers.events.clear()
++
++    def vch_cuda_peak(self):
++        import torch
++        torch.cuda.synchronize()
++        cache = self.model_runner.kv_cache_config
++        target_tensors = [tensor for tensor in cache.kv_cache_tensors
++                          if any(name.startswith('language_model.model.layers.') for name in tensor.shared_by)]
++        return dict(allocated_bytes=torch.cuda.max_memory_allocated(),
++                    reserved_bytes=torch.cuda.max_memory_reserved(),
++                    target_kv_reserved_bytes=sum(tensor.size for tensor in target_tensors),
++                    target_kv_pool_blocks=cache.num_blocks,
++                    configured_kv_block_tokens=self.vllm_config.cache_config.block_size,
++                    stage_cuda_ms=self._vch_stage_timers.read() if hasattr(self, '_vch_stage_timers') else None)
++
+     def native_eval_metadata(self):
+         context=self.vllm_config.compilation_config.static_forward_context
+         entries=[dict(name=name,impl=type(layer.impl).__module__+'.'+type(layer.impl).__name__)
+@@ -38,6 +67,7 @@ class WorkerMetadata:
+         spec=self.vllm_config.speculative_config
+         return dict(numeric=numeric_state(),attention=entries,
+                     speculative_tokens=spec.num_speculative_tokens if spec else None,
++                    rejection_sample_method=getattr(spec, 'rejection_sample_method', None),
+                     draft_noncausal=draft_config.attention_config.use_non_causal if draft_config else None,
+                     target_noncausal=self.vllm_config.attention_config.use_non_causal,
+                     diagnostic_hooks=bool(getattr(self.model_runner,'_diagnostic_hooks_installed',False)))
+@@ -58,6 +88,8 @@ def check_worker(value,arm,plan):
+     if arm=='sd' and (value['speculative_tokens']!=plan['speculative_tokens'] or
+                       value['draft_noncausal'] is not (plan['method']!='jetspec')):
+         raise ValueError('Actual draft speculative budget/causality differs from admitted method')
++    if plan.get('visual_context_trace') and arm=='sd' and value.get('rejection_sample_method') != 'standard':
++        raise ValueError('Visual-budget sweep requires standard target-greedy rejection sampling')
+     if arm=='ar' and value['speculative_tokens'] is not None:raise ValueError('AR unexpectedly mounted a drafter')
+     if arm=='sd' and (not any(row['name'].startswith('model.layers.') for row in value['attention']) or
+                       any(not row['impl'].endswith('.FlashAttentionImpl') for row in value['attention'])):
+@@ -96,7 +128,14 @@ def messages_for(session,turn,reference,system_prompt=None):
+ 
+ 
+ def request(llm,processor,params,torch,Image,session,turn,reference,plan):
+-    torch.cuda.synchronize();start=time.perf_counter_ns();wall_start=time.time_ns();image=None
++    trace_mode = plan.get('visual_context_trace')
++    diagnostic = trace_mode == 'diagnostic'
++    if trace_mode:
++        from research.visual_context_horizon import collect_runtime_trace
++    torch.cuda.synchronize()
++    if diagnostic:
++        llm.collective_rpc('vch_reset_cuda_peak', timeout=90)
++    start=time.perf_counter_ns();wall_start=time.time_ns();image=None
+     try:
+         data=Path(session['image']).read_bytes()
+         import hashlib
+@@ -107,18 +146,26 @@ def request(llm,processor,params,torch,Image,session,turn,reference,plan):
+         messages=messages_for(session,turn,reference,plan.get('system_prompt'))
+         prompt=processor.apply_chat_template(messages,tokenize=False,add_generation_prompt=True,**plan.get('chat_template_kwargs',{}))
+         image_uuid=str(uuid.uuid4())
+-        outputs=llm.generate([dict(prompt=prompt,multi_modal_data={'image':image},
+-                                  multi_modal_uuids={'image':[image_uuid]})],params,use_tqdm=False)
++        tracer = collect_runtime_trace.observe(llm, diagnostic) if trace_mode else contextlib.nullcontext()
++        with tracer as captured:
++            outputs=llm.generate([dict(prompt=prompt,multi_modal_data={'image':image},
++                                      multi_modal_uuids={'image':[image_uuid]})],params,use_tqdm=False)
+         torch.cuda.synchronize()
+         if len(outputs)!=1 or len(outputs[0].outputs)!=1:raise ValueError('Batch1 single-output contract changed')
+         output=outputs[0].outputs[0]
+         tokens=list(output.token_ids);inputs=list(outputs[0].prompt_token_ids)
+         text=output.text;finish=output.finish_reason;stop=output.stop_reason
+         end=time.perf_counter_ns();wall_end=time.time_ns()
+-        return dict(id=session['id'],turn=turn,status='complete',prompt_token_ids=inputs,tokens=tokens,text=text,
++        row = dict(id=session['id'],turn=turn,status='complete',prompt_token_ids=inputs,tokens=tokens,text=text,
+                     finish_reason=finish,stop_reason=stop,image_uuid=image_uuid,image_sha256=image_sha,
+                     messages=messages,prompt=prompt,began_ns=start,ended_ns=end,wall_seconds=(end-start)/1e9,
+                     began_wall_ns=wall_start,ended_wall_ns=wall_end)
++        if trace_mode:
++            row.update(collect_runtime_trace.row_trace(captured, processor, row, image.width, image.height,
++                                                       diagnostic))
++        if diagnostic:
++            row['diagnostic']['worker_cuda_peak'] = llm.collective_rpc('vch_cuda_peak', timeout=90)
++        return row
+     finally:
+         if image is not None:image.close()
+ 
+@@ -161,15 +208,31 @@ def main():
+         # Per-request official counters only in a separate stats-enabled supplement
+         # (disable_log_stats=False); primary timing runs never poll metrics per request.
+         per_request=arm=='sd' and kwargs.get('disable_log_stats') is False
++        short = plan.get('short_reference_and_warmup')
+         for phase in (('reference',) if args.stage=='reference' else ('warmup','timed')):
++            if plan.get('formal_timing'):
++                print('VCH_PHASE_BEGIN '+phase, flush=True)
++            if short and phase in ('reference','warmup'):
++                short_params = copy.deepcopy(params)
++                short_params.max_tokens = short['reference_cap' if phase=='reference' else 'warmup_cap']
++            profiling = plan.get('visual_context_trace') == 'diagnostic' and phase == 'timed'
++            if profiling:
++                llm.collective_rpc('vch_enable_stage_timers', timeout=90)
++                llm.start_profile(args.stage)
+             before=metrics(llm) if arm=='sd' and phase=='timed' else None
+             for session in plan['sessions']:
+                 for turn in range(len(session['questions'])):
+                     try:
+                         start=metrics(llm) if per_request and phase=='timed' else None
+-                        row=request(llm,processor,params,torch,Image,session,turn,reference,plan)
++                        request_params = params
++                        if short and (phase == 'reference' or
++                                      (phase == 'warmup' and session['id'] not in short['long_warmup_ids'])):
++                            request_params = short_params
++                        row=request(llm,processor,request_params,torch,Image,session,turn,reference,plan)
++                        if short:
++                            row['configured_output_cap'] = request_params.max_tokens
+                         row['phase']=phase
+-                        if start is not None:row['official_counters']=metric_delta(start,metrics(llm))
++                        if per_request and phase=='timed':row['official_counters']=metric_delta(start,metrics(llm))
+                         if phase!='reference' and row['prompt_token_ids']!=reference[(session['id'],turn)]['prompt_token_ids']:
+                             raise ValueError('Physical input tokens differ from canonical history')
+                     except Exception as error:
+@@ -177,8 +240,14 @@ def main():
+                         save(out,report);raise
+                     report['rows'].append(row)
+                     if phase=='reference':reference[(session['id'],turn)]=row
+-                    save(out,report)
++                    if not plan.get('visual_context_trace') or len(report['rows']) % 25 == 0:
++                        save(out,report)
++            if plan.get('formal_timing'):
++                print('VCH_PHASE_END '+phase, flush=True)
+             if arm=='sd' and phase=='timed':report['timed_official_counters']=metric_delta(before,metrics(llm))
++            if profiling:
++                llm.stop_profile()
++                llm.collective_rpc('vch_disable_stage_timers', timeout=90)
+         report['worker_after']=worker_metadata(llm,arm,plan)
+         if report['worker_after']!=report['worker_before']:raise ValueError('Worker state changed during collection')
+         verify_plan(plan);report['status']='complete'

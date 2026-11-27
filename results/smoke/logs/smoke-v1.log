@@ -1,0 +1,39 @@
+{
+  "platform": "Linux-4.19.90-2107.6.0.0192.8.oe1.bclinux.x86_64-x86_64-with-glibc2.35",
+  "python": "3.12.3",
+  "torch": "2.11.0+cu130",
+  "torch_cuda": "13.0",
+  "transformers": "5.11.0",
+  "vllm": "0.22.1",
+  "torch_installed_from": "/root/visual_context_horizon/runtime/torch/__init__.py",
+  "vllm_installed_from": "/root/visual_context_horizon/runtime/vllm/__init__.py",
+  "cuda_available": true
+}
+index, name, uuid, memory.total [MiB], memory.used [MiB], driver_version
+0, NVIDIA A800 80GB PCIe, GPU-14899bb2-cfa7-0cce-feb0-e42d8a26a01e, 81920 MiB, 0 MiB, 580.105.08
+{
+  "source_checkpoint": "/root/autodl-tmp/veladraft_supplement_20261110/assets/draft8b/dflash_final.pt",
+  "source_sha256": "86b40b550dae022d8f8669302022c50aaf36441c6f36c1f0adde6628f5c6135c",
+  "config_sha256": "282e48983c682b292a338a8310d384b1c720b12a22c352a2b4e47a103e08feee",
+  "registered_architecture": "DFlashDraftModel",
+  "architecture_checked_against_installed_registry": true,
+  "model_safetensors_sha256": "d5997df38eb443398dba33394b2c950fdbde314e317ca7f81823609c16d7dd6d",
+  "tensor_count": 36,
+  "all_tensors_bitwise_equal": true,
+  "cuda_initialized": false,
+  "config_changes": [
+    "architectures",
+    "dflash_config.official_spatial_adapter_v1",
+    "rope_parameters.mrope_section",
+    "rope_parameters.mrope_interleaved"
+  ],
+  "head_and_embedding": "Absent in source; official upstream target sharing retained"
+}
+{
+  "format": "veladraft-native-vllm-e2e-v1",
+  "status": "failed",
+  "paper_ready": false,
+  "quality_evaluation_required": true,
+  "evidence": "/root/visual_context_horizon/smoke-v1/v256.evidence",
+  "error": "Native stage failed: reference; preserved raw/logs"
+}

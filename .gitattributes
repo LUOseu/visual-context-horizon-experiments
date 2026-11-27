@@ -1,0 +1,4 @@
+*.csv -text whitespace=-blank-at-eol
+*.log -text whitespace=-blank-at-eol
+*.patch -text whitespace=-blank-at-eol
+*.tar.gz -text

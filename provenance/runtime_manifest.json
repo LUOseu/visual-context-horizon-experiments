@@ -1,0 +1,28 @@
+{
+  "method": "dflash",
+  "scope": "Qwen3-VL-8B trained DFlash, interleaved spatial MRoPE, target head shared, public linear verifier",
+  "bootstrap": "/root/visual_context_horizon/source-v3/research/qwen3vl8b_native_vllm/spatial_adapter/bootstrap.py",
+  "checkpoint": "/root/autodl-tmp/veladraft_supplement_20261110/assets/draft8b/dflash_final.pt",
+  "environment": {},
+  "files": {
+    "/root/autodl-tmp/veladraft_supplement_20261110/assets/draft8b/dflash_final.pt": "86b40b550dae022d8f8669302022c50aaf36441c6f36c1f0adde6628f5c6135c",
+    "/root/visual_context_horizon/source-v3/research/qwen3vl8b_native_vllm/spatial_adapter/bootstrap.py": "66874d50630f6ed84f196859cc74850209cc35d0a750c8880b281c2bed417ff7",
+    "/root/visual_context_horizon/source-v3/research/qwen3vl8b_native_vllm/spatial_adapter/export_checkpoint.py": "618c5e2d7c9ff8b632ea756d677bf89ca6fe8c712b65ba2ccc4366e9def067c7",
+    "/root/visual_context_horizon/source-v3/research/qwen3vl8b_native_vllm/spatial_adapter/official_spatial_adapter.py": "17c9c160ba86770238a43f0ba898d840976225cc38a374f82136f0cceb0213ff",
+    "/root/visual_context_horizon/source-v3/research/qwen3vl8b_native_vllm/spatial_adapter/official_spatial_graph_adapter.py": "748538d2b1e91e8c9bd69a902c7b78f7c57cec333bfb977a0b1694749be74f87",
+    "/root/visual_context_horizon/source-v3/research/qwen3vl8b_native_vllm/spatial_adapter/official_spatial_graph_adapter_v2.py": "3c66daaa63db7731de144eda1d215ab2d1623a7a4ee836d4109df583382698c8",
+    "/root/visual_context_horizon/source-v3/research/qwen3vl8b_native_vllm/spatial_adapter/official_spatial_graph_adapter_v3.py": "a02c0ef2bc238a729bb6e7bcad93b2dc9936a06046a90c360c5adfd5afb034f5",
+    "/root/visual_context_horizon/source-v3/research/qwen3vl8b_native_vllm/spatial_adapter/test_graph_v3_cpu.py": "922b3a09ba331ad40fb247d266658503ffe3f61fff7bc1007e7ea2a85e65821d",
+    "/root/visual_context_horizon/source-v3/research/qwen3vl8b_native_vllm/spatial_adapter/test_mrope_interleaved.py": "4dd30816c287fd69791099d351cd65cc8d669f19580f207853b4f3c6811d7d47",
+    "/root/visual_context_horizon/source-v3/research/qwen3vl8b_native_vllm/spatial_adapter/test_qwen3vl8b_contract.py": "eace3ff95f528099797b943892371a4638f201b20efe99a4d22104692655f82a",
+    "/root/visual_context_horizon/source-v3/research/qwen3vl8b_native_vllm/spatial_adapter/graph_v2_source_bindings.json": "2db7c522ec376256c1d18b6872b399ddfec93c490558ba7bc3888b012e7d4865",
+    "/root/visual_context_horizon/source-v3/research/qwen3vl8b_native_vllm/spatial_adapter/graph_v3_source_bindings.json": "44b8c429d02c1fcb06e3f64b42bf562d7c2eff7ae957d6ed794147cd392d8fc2",
+    "/root/visual_context_horizon/source-v3/research/qwen3vl8b_native_vllm/spatial_adapter/source_bindings.json": "eb4b98c92733670d52d85f2a3f883278ad06bc6f0e4c4bc69daf7d1704f378ed",
+    "/root/visual_context_horizon/runtime/vllm/v1/sample/rejection_sampler.py": "0e2be02449692e8f4aea22c4637727e8d1fc296fb413e5407b1aa79419bf7b41",
+    "/root/visual_context_horizon/runtime/vllm/v1/engine/llm_engine.py": "2900f6732a1e507f6ced6f75f05f1fcaf2cc2929df0f5066574e9077ad3fbde1",
+    "/root/visual_context_horizon/runtime/vllm/v1/engine/output_processor.py": "464c3cda347512cf1090f8e6471d0d3f0f65e286eb9a7b97be52efbc1ffd572a",
+    "/root/visual_context_horizon/runtime/vllm/entrypoints/offline_utils.py": "688fbad0af9c2180b83aa77dcd0dbda85ca076a6c72bffa61840896d950cf458",
+    "/root/visual_context_horizon/runtime/vllm/model_executor/models/qwen3_vl.py": "9f8e813db5b367af6396aa659dcfd3a338ba3b77476718ab464b4c9f9a6ea542"
+  },
+  "verification": "Upstream vLLM greedy target-argmax prefix acceptance, mismatch recovery and target bonus"
+}

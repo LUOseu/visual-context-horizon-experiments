@@ -1,0 +1,221 @@
+{
+  "speculative_tokens": 7,
+  "max_new_tokens": 512,
+  "max_model_len": 8192,
+  "gpu_memory_utilization": 0.45,
+  "min_pixels": 1114112,
+  "max_pixels": 1310720,
+  "repeats": 1,
+  "method": "dflash",
+  "sd_cudagraph_mode": "PIECEWISE",
+  "format": "veladraft-native-vllm-e2e-v1",
+  "seed": 43,
+  "gpu": 0,
+  "gpus": [
+    0
+  ],
+  "tensor_parallel_size": 1,
+  "target": "/dev/shm/visual_context_horizon/target",
+  "draft": "/dev/shm/visual_context_horizon/draft",
+  "adapter": {
+    "method": "dflash",
+    "scope": "Qwen3-VL-8B trained DFlash, interleaved spatial MRoPE, target head shared, public linear verifier",
+    "bootstrap": "/root/visual_context_horizon/source-v2/research/qwen3vl8b_native_vllm/spatial_adapter/bootstrap.py",
+    "checkpoint": "/root/autodl-tmp/veladraft_supplement_20261110/assets/draft8b/dflash_final.pt",
+    "environment": {},
+    "files": {
+      "/root/autodl-tmp/veladraft_supplement_20261110/assets/draft8b/dflash_final.pt": "86b40b550dae022d8f8669302022c50aaf36441c6f36c1f0adde6628f5c6135c",
+      "/root/visual_context_horizon/source-v2/research/qwen3vl8b_native_vllm/spatial_adapter/bootstrap.py": "66874d50630f6ed84f196859cc74850209cc35d0a750c8880b281c2bed417ff7",
+      "/root/visual_context_horizon/source-v2/research/qwen3vl8b_native_vllm/spatial_adapter/export_checkpoint.py": "618c5e2d7c9ff8b632ea756d677bf89ca6fe8c712b65ba2ccc4366e9def067c7",
+      "/root/visual_context_horizon/source-v2/research/qwen3vl8b_native_vllm/spatial_adapter/official_spatial_adapter.py": "17c9c160ba86770238a43f0ba898d840976225cc38a374f82136f0cceb0213ff",
+      "/root/visual_context_horizon/source-v2/research/qwen3vl8b_native_vllm/spatial_adapter/official_spatial_graph_adapter.py": "748538d2b1e91e8c9bd69a902c7b78f7c57cec333bfb977a0b1694749be74f87",
+      "/root/visual_context_horizon/source-v2/research/qwen3vl8b_native_vllm/spatial_adapter/official_spatial_graph_adapter_v2.py": "3c66daaa63db7731de144eda1d215ab2d1623a7a4ee836d4109df583382698c8",
+      "/root/visual_context_horizon/source-v2/research/qwen3vl8b_native_vllm/spatial_adapter/official_spatial_graph_adapter_v3.py": "a02c0ef2bc238a729bb6e7bcad93b2dc9936a06046a90c360c5adfd5afb034f5",
+      "/root/visual_context_horizon/source-v2/research/qwen3vl8b_native_vllm/spatial_adapter/test_graph_v3_cpu.py": "922b3a09ba331ad40fb247d266658503ffe3f61fff7bc1007e7ea2a85e65821d",
+      "/root/visual_context_horizon/source-v2/research/qwen3vl8b_native_vllm/spatial_adapter/test_mrope_interleaved.py": "4dd30816c287fd69791099d351cd65cc8d669f19580f207853b4f3c6811d7d47",
+      "/root/visual_context_horizon/source-v2/research/qwen3vl8b_native_vllm/spatial_adapter/test_qwen3vl8b_contract.py": "eace3ff95f528099797b943892371a4638f201b20efe99a4d22104692655f82a",
+      "/root/visual_context_horizon/source-v2/research/qwen3vl8b_native_vllm/spatial_adapter/graph_v2_source_bindings.json": "2db7c522ec376256c1d18b6872b399ddfec93c490558ba7bc3888b012e7d4865",
+      "/root/visual_context_horizon/source-v2/research/qwen3vl8b_native_vllm/spatial_adapter/graph_v3_source_bindings.json": "44b8c429d02c1fcb06e3f64b42bf562d7c2eff7ae957d6ed794147cd392d8fc2",
+      "/root/visual_context_horizon/source-v2/research/qwen3vl8b_native_vllm/spatial_adapter/source_bindings.json": "eb4b98c92733670d52d85f2a3f883278ad06bc6f0e4c4bc69daf7d1704f378ed",
+      "/root/visual_context_horizon/runtime/vllm/v1/sample/rejection_sampler.py": "0e2be02449692e8f4aea22c4637727e8d1fc296fb413e5407b1aa79419bf7b41",
+      "/root/visual_context_horizon/runtime/vllm/v1/engine/llm_engine.py": "2900f6732a1e507f6ced6f75f05f1fcaf2cc2929df0f5066574e9077ad3fbde1",
+      "/root/visual_context_horizon/runtime/vllm/v1/engine/output_processor.py": "464c3cda347512cf1090f8e6471d0d3f0f65e286eb9a7b97be52efbc1ffd572a",
+      "/root/visual_context_horizon/runtime/vllm/entrypoints/offline_utils.py": "688fbad0af9c2180b83aa77dcd0dbda85ca076a6c72bffa61840896d950cf458",
+      "/root/visual_context_horizon/runtime/vllm/model_executor/models/qwen3_vl.py": "9f8e813db5b367af6396aa659dcfd3a338ba3b77476718ab464b4c9f9a6ea542"
+    },
+    "verification": "Upstream vLLM greedy target-argmax prefix acceptance, mismatch recovery and target bonus"
+  },
+  "files": {
+    "/dev/shm/visual_context_horizon/target/._.": "8e134c8df3dc63f19033f8c2df284ed8567039ea78957b36bac2bb07de32d2f2",
+    "/dev/shm/visual_context_horizon/target/._chat_template.json": "8e134c8df3dc63f19033f8c2df284ed8567039ea78957b36bac2bb07de32d2f2",
+    "/dev/shm/visual_context_horizon/target/._config.json": "8e134c8df3dc63f19033f8c2df284ed8567039ea78957b36bac2bb07de32d2f2",
+    "/dev/shm/visual_context_horizon/target/._generation_config.json": "8e134c8df3dc63f19033f8c2df284ed8567039ea78957b36bac2bb07de32d2f2",
+    "/dev/shm/visual_context_horizon/target/._merges.txt": "8e134c8df3dc63f19033f8c2df284ed8567039ea78957b36bac2bb07de32d2f2",
+    "/dev/shm/visual_context_horizon/target/._model.safetensors.index.json": "8e134c8df3dc63f19033f8c2df284ed8567039ea78957b36bac2bb07de32d2f2",
+    "/dev/shm/visual_context_horizon/target/._preprocessor_config.json": "8e134c8df3dc63f19033f8c2df284ed8567039ea78957b36bac2bb07de32d2f2",
+    "/dev/shm/visual_context_horizon/target/._tokenizer.json": "8e134c8df3dc63f19033f8c2df284ed8567039ea78957b36bac2bb07de32d2f2",
+    "/dev/shm/visual_context_horizon/target/._tokenizer_config.json": "8e134c8df3dc63f19033f8c2df284ed8567039ea78957b36bac2bb07de32d2f2",
+    "/dev/shm/visual_context_horizon/target/._video_preprocessor_config.json": "8e134c8df3dc63f19033f8c2df284ed8567039ea78957b36bac2bb07de32d2f2",
+    "/dev/shm/visual_context_horizon/target/._vocab.json": "8e134c8df3dc63f19033f8c2df284ed8567039ea78957b36bac2bb07de32d2f2",
+    "/dev/shm/visual_context_horizon/target/READY.json": "f0e156b6e1e77aa41549c8bb16d8dd02f471d6b74429d09555e35b1175b967c0",
+    "/dev/shm/visual_context_horizon/target/chat_template.json": "5c72a170d2a4a1a3bc5adad2e689ae28138a9700e5b8c96c0266331e86c0acce",
+    "/dev/shm/visual_context_horizon/target/config.json": "5cd452860dc1e9c29dd71cc3cef7f39b338b7a40793f7a260655c2d3568f3661",
+    "/dev/shm/visual_context_horizon/target/generation_config.json": "8469742d1fce0de951c8909b26a2c0c0d8490837ce476efb114da9e0cefc4d44",
+    "/dev/shm/visual_context_horizon/target/merges.txt": "599bab54075088774b1733fde865d5bd747cbcc7a547c5bc12610e874e26f5e3",
+    "/dev/shm/visual_context_horizon/target/model-00001-of-00004.safetensors": "d5d0aef0eb170fc7453a296c43c0849a56f510555d3588e4fd662bb35490aefa",
+    "/dev/shm/visual_context_horizon/target/model-00001-of-00004.safetensors.download.lock": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/dev/shm/visual_context_horizon/target/model-00001-of-00004.safetensors.ranges.json": "3793ece38f70573c70a34d6bdbdb9b16320f10af376a769cac6ec9c302b35ad9",
+    "/dev/shm/visual_context_horizon/target/model-00002-of-00004.safetensors": "8be88fb5501e4d5719a6d4cc212e6a13480330e74f3e8c77daa1a68f199106b5",
+    "/dev/shm/visual_context_horizon/target/model-00002-of-00004.safetensors.download.lock": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/dev/shm/visual_context_horizon/target/model-00002-of-00004.safetensors.ranges.json": "fef57405634d72433e9c5b27f846328c90409789c4c05859216b5cf122148155",
+    "/dev/shm/visual_context_horizon/target/model-00003-of-00004.safetensors": "83de00eafe6e0d57ccd009dbcf71c9974d74df2f016c27afb7e95aafd16b2192",
+    "/dev/shm/visual_context_horizon/target/model-00003-of-00004.safetensors.download.lock": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/dev/shm/visual_context_horizon/target/model-00003-of-00004.safetensors.ranges.json": "3a0f8dfc7a186e5053313397e967193650365a26ebd3ea8af7d618cd997e8c53",
+    "/dev/shm/visual_context_horizon/target/model-00004-of-00004.safetensors": "0a88b98e9f96270973f567e6a2c103ede6ccdf915ca3075e21c755604d0377a5",
+    "/dev/shm/visual_context_horizon/target/model-00004-of-00004.safetensors.download.lock": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/dev/shm/visual_context_horizon/target/model-00004-of-00004.safetensors.ranges.json": "5e49f4e0ef2b44851cfa2f28968f06a97efe646582e1d0f3ffdfba7ade51f55b",
+    "/dev/shm/visual_context_horizon/target/model.safetensors.index.json": "520b2e05079402e9468a8701d03d1154d14b2599593afb6effa7fb60c1bff070",
+    "/dev/shm/visual_context_horizon/target/preprocessor_config.json": "27225450ac9c6529872ee1924fcb0962ff5634834f817040f444118116f4e516",
+    "/dev/shm/visual_context_horizon/target/tokenizer.json": "a5d85b6dcc535e6b93115a9ef287e6132fdbf30270da6218194ba742261173c7",
+    "/dev/shm/visual_context_horizon/target/tokenizer_config.json": "c2da771801886ad9ae98181793ffd3dfb7f1af30f6f7c6a4e15d7dbba52e2399",
+    "/dev/shm/visual_context_horizon/target/video_preprocessor_config.json": "7768af27c1fafa9cc9011c1dc20067e03f8915e03b63504550e11d5066986d13",
+    "/dev/shm/visual_context_horizon/target/vocab.json": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910",
+    "/dev/shm/visual_context_horizon/draft/config.json": "282e48983c682b292a338a8310d384b1c720b12a22c352a2b4e47a103e08feee",
+    "/dev/shm/visual_context_horizon/draft/export_receipt.json": "d69624531f653f4e100240991f3ff8ac92e5c43d39fb4e77a56775e23e2ca777",
+    "/dev/shm/visual_context_horizon/draft/model.safetensors": "d5997df38eb443398dba33394b2c950fdbde314e317ca7f81823609c16d7dd6d",
+    "/root/visual_context_horizon/smoke-v2/requests.jsonl": "12b8a75cbd653cc08fdd98f0a588aa9d34d79fdb4f424b9f55635a8e081cc7f5",
+    "/root/visual_context_horizon/data/chartqa/images/chartqa-augmented_test-001326.png": "f64a480b209ffac333e04f2d0381b1be6e83bc74ba5c74d339021ca4d053da4e",
+    "/root/visual_context_horizon/data/chartqa/images/chartqa-augmented_test-001346.png": "403e4e68d3b1d505cc94e5065da238d335804e40c2cc9843368cf22fde5e5c8c",
+    "/root/visual_context_horizon/data/long_form/images/000000220310.jpg": "2969b052e6af353a963cad8139b95da53fb455235b80361c9a8eab2f66bd89ee",
+    "/root/visual_context_horizon/data/long_form/images/000000215778.jpg": "37486e1ac89a7860c4721892f3b56d8acde342a62dd211eba10a3128a9c1655c",
+    "/root/visual_context_horizon/data/textvqa/images/textvqa-034624.jpg": "6c6c53a93c5019f656375e48ca15e71adec4cb7b3d0f25c1272b1ab2a3e51bcd",
+    "/root/visual_context_horizon/data/textvqa/images/textvqa-034638.jpg": "a7e073e81cedab1e56a0512b74c80e619a320fdb52d67bb39059c51e2b1cd96f",
+    "/root/autodl-tmp/veladraft_supplement_20261110/assets/draft8b/dflash_final.pt": "86b40b550dae022d8f8669302022c50aaf36441c6f36c1f0adde6628f5c6135c",
+    "/root/visual_context_horizon/source-v2/research/qwen3vl8b_native_vllm/spatial_adapter/bootstrap.py": "66874d50630f6ed84f196859cc74850209cc35d0a750c8880b281c2bed417ff7",
+    "/root/visual_context_horizon/source-v2/research/qwen3vl8b_native_vllm/spatial_adapter/export_checkpoint.py": "618c5e2d7c9ff8b632ea756d677bf89ca6fe8c712b65ba2ccc4366e9def067c7",
+    "/root/visual_context_horizon/source-v2/research/qwen3vl8b_native_vllm/spatial_adapter/official_spatial_adapter.py": "17c9c160ba86770238a43f0ba898d840976225cc38a374f82136f0cceb0213ff",
+    "/root/visual_context_horizon/source-v2/research/qwen3vl8b_native_vllm/spatial_adapter/official_spatial_graph_adapter.py": "748538d2b1e91e8c9bd69a902c7b78f7c57cec333bfb977a0b1694749be74f87",
+    "/root/visual_context_horizon/source-v2/research/qwen3vl8b_native_vllm/spatial_adapter/official_spatial_graph_adapter_v2.py": "3c66daaa63db7731de144eda1d215ab2d1623a7a4ee836d4109df583382698c8",
+    "/root/visual_context_horizon/source-v2/research/qwen3vl8b_native_vllm/spatial_adapter/official_spatial_graph_adapter_v3.py": "a02c0ef2bc238a729bb6e7bcad93b2dc9936a06046a90c360c5adfd5afb034f5",
+    "/root/visual_context_horizon/source-v2/research/qwen3vl8b_native_vllm/spatial_adapter/test_graph_v3_cpu.py": "922b3a09ba331ad40fb247d266658503ffe3f61fff7bc1007e7ea2a85e65821d",
+    "/root/visual_context_horizon/source-v2/research/qwen3vl8b_native_vllm/spatial_adapter/test_mrope_interleaved.py": "4dd30816c287fd69791099d351cd65cc8d669f19580f207853b4f3c6811d7d47",
+    "/root/visual_context_horizon/source-v2/research/qwen3vl8b_native_vllm/spatial_adapter/test_qwen3vl8b_contract.py": "eace3ff95f528099797b943892371a4638f201b20efe99a4d22104692655f82a",
+    "/root/visual_context_horizon/source-v2/research/qwen3vl8b_native_vllm/spatial_adapter/graph_v2_source_bindings.json": "2db7c522ec376256c1d18b6872b399ddfec93c490558ba7bc3888b012e7d4865",
+    "/root/visual_context_horizon/source-v2/research/qwen3vl8b_native_vllm/spatial_adapter/graph_v3_source_bindings.json": "44b8c429d02c1fcb06e3f64b42bf562d7c2eff7ae957d6ed794147cd392d8fc2",
+    "/root/visual_context_horizon/source-v2/research/qwen3vl8b_native_vllm/spatial_adapter/source_bindings.json": "eb4b98c92733670d52d85f2a3f883278ad06bc6f0e4c4bc69daf7d1704f378ed",
+    "/root/visual_context_horizon/runtime/vllm/v1/sample/rejection_sampler.py": "0e2be02449692e8f4aea22c4637727e8d1fc296fb413e5407b1aa79419bf7b41",
+    "/root/visual_context_horizon/runtime/vllm/v1/engine/llm_engine.py": "2900f6732a1e507f6ced6f75f05f1fcaf2cc2929df0f5066574e9077ad3fbde1",
+    "/root/visual_context_horizon/runtime/vllm/v1/engine/output_processor.py": "464c3cda347512cf1090f8e6471d0d3f0f65e286eb9a7b97be52efbc1ffd572a",
+    "/root/visual_context_horizon/runtime/vllm/entrypoints/offline_utils.py": "688fbad0af9c2180b83aa77dcd0dbda85ca076a6c72bffa61840896d950cf458",
+    "/root/visual_context_horizon/runtime/vllm/model_executor/models/qwen3_vl.py": "9f8e813db5b367af6396aa659dcfd3a338ba3b77476718ab464b4c9f9a6ea542",
+    "/root/visual_context_horizon/runtime_manifest.json": "233cc42da191b80194411ed18f6e2caa539ec5ffa56d3b400af1ac581bf81d31",
+    "/root/visual_context_horizon/source-v2/vlm_dflash/eval/native.py": "16669fda7ead220c639b469e54dbeca6750dbaff7ff1873cb94e34f313b11a15",
+    "/root/visual_context_horizon/source-v2/vlm_dflash/eval/native_runtime.py": "3250de436826223284439ebd3a687140b10cc835ad951fff53e3b1211526a2b5",
+    "/root/visual_context_horizon/source-v2/vlm_dflash/eval/native_resources.py": "86bbe3daae2d1f441bb4668a3fa433dd97e210a6cd61c72fab82df46eca81622",
+    "/root/visual_context_horizon/source-v2/vlm_dflash/eval/native_bootstrap/sitecustomize.py": "4ab4d05782a2f00d3cc7c974269a237cf4e94df864f732692109da4962635fe4",
+    "/root/visual_context_horizon/source-v2/vlm_dflash/eval/digest_cache.py": "da15b4332ac6c64dd66d0b8ce64d39c0ecbf6685b3fa6234311e0ca41727eb39",
+    "/root/visual_context_horizon/runtime/vllm/engine/arg_utils.py": "ee107df77e59d1ca860d826feda540158bdefbdcaa3a2b786967396d83315d16",
+    "/root/visual_context_horizon/runtime/vllm/model_executor/models/qwen3_dflash.py": "7c99f26d24ac1f31dc317284009d05165155d32e05b3cf1277914ad3f747d82a",
+    "/root/visual_context_horizon/runtime/vllm/v1/spec_decode/dflash.py": "4a8d96af7b128ad626128d96524d7e75c0057ca31a1ffdab995df19d8f26bd69",
+    "/root/visual_context_horizon/source-v2/research/visual_context_horizon/collect_runtime_trace.py": "69c231db971e8b3e1b4b8ed31a6a222358a64f4472a580ee6b78b09f60e4c0fe"
+  },
+  "chat_template_kwargs": {},
+  "system_prompt": null,
+  "stop_token_ids": [
+    151645,
+    151643
+  ],
+  "source_integrity_policy": "SHA256 on first observation or file metadata change; inode/size/mtime/ctime keyed cache",
+  "sessions": [
+    {
+      "id": "chartqa:chartqa-augmented_test-001326",
+      "questions": [
+        "What percentage of the national gross domestic product was China's gross national debt in 2019?\nAnswer the question using a single word or phrase."
+      ],
+      "image": "/root/visual_context_horizon/data/chartqa/images/chartqa-augmented_test-001326.png",
+      "image_sha256": "f64a480b209ffac333e04f2d0381b1be6e83bc74ba5c74d339021ca4d053da4e"
+    },
+    {
+      "id": "chartqa:chartqa-augmented_test-001346",
+      "questions": [
+        "What percentage of the global software industry does database software account for?\nAnswer the question using a single word or phrase."
+      ],
+      "image": "/root/visual_context_horizon/data/chartqa/images/chartqa-augmented_test-001346.png",
+      "image_sha256": "403e4e68d3b1d505cc94e5065da238d335804e40c2cc9843368cf22fde5e5c8c"
+    },
+    {
+      "id": "long_form:coco-000000220310",
+      "questions": [
+        "Describe this image in detail. Describe the scene, the visible objects and people, their attributes, actions, spatial relationships, and the background. Ground your description in visible evidence and avoid speculation."
+      ],
+      "image": "/root/visual_context_horizon/data/long_form/images/000000220310.jpg",
+      "image_sha256": "2969b052e6af353a963cad8139b95da53fb455235b80361c9a8eab2f66bd89ee"
+    },
+    {
+      "id": "long_form:coco-000000215778",
+      "questions": [
+        "Describe this image in detail. Describe the scene, the visible objects and people, their attributes, actions, spatial relationships, and the background. Ground your description in visible evidence and avoid speculation."
+      ],
+      "image": "/root/visual_context_horizon/data/long_form/images/000000215778.jpg",
+      "image_sha256": "37486e1ac89a7860c4721892f3b56d8acde342a62dd211eba10a3128a9c1655c"
+    },
+    {
+      "id": "textvqa:textvqa-034624",
+      "questions": [
+        "what kind of comupter is this?\nAnswer the question using a single word or phrase."
+      ],
+      "image": "/root/visual_context_horizon/data/textvqa/images/textvqa-034624.jpg",
+      "image_sha256": "6c6c53a93c5019f656375e48ca15e71adec4cb7b3d0f25c1272b1ab2a3e51bcd"
+    },
+    {
+      "id": "textvqa:textvqa-034638",
+      "questions": [
+        "whats the lowest number yard line that you can see?\nAnswer the question using a single word or phrase."
+      ],
+      "image": "/root/visual_context_horizon/data/textvqa/images/textvqa-034638.jpg",
+      "image_sha256": "a7e073e81cedab1e56a0512b74c80e619a320fdb52d67bb39059c51e2b1cd96f"
+    }
+  ],
+  "visual_context_trace": "timing",
+  "compile_cache": "/root/visual_context_horizon/compile-cache",
+  "target_files": [
+    "/dev/shm/visual_context_horizon/target/._.",
+    "/dev/shm/visual_context_horizon/target/._chat_template.json",
+    "/dev/shm/visual_context_horizon/target/._config.json",
+    "/dev/shm/visual_context_horizon/target/._generation_config.json",
+    "/dev/shm/visual_context_horizon/target/._merges.txt",
+    "/dev/shm/visual_context_horizon/target/._model.safetensors.index.json",
+    "/dev/shm/visual_context_horizon/target/._preprocessor_config.json",
+    "/dev/shm/visual_context_horizon/target/._tokenizer.json",
+    "/dev/shm/visual_context_horizon/target/._tokenizer_config.json",
+    "/dev/shm/visual_context_horizon/target/._video_preprocessor_config.json",
+    "/dev/shm/visual_context_horizon/target/._vocab.json",
+    "/dev/shm/visual_context_horizon/target/READY.json",
+    "/dev/shm/visual_context_horizon/target/chat_template.json",
+    "/dev/shm/visual_context_horizon/target/config.json",
+    "/dev/shm/visual_context_horizon/target/generation_config.json",
+    "/dev/shm/visual_context_horizon/target/merges.txt",
+    "/dev/shm/visual_context_horizon/target/model-00001-of-00004.safetensors",
+    "/dev/shm/visual_context_horizon/target/model-00001-of-00004.safetensors.download.lock",
+    "/dev/shm/visual_context_horizon/target/model-00001-of-00004.safetensors.ranges.json",
+    "/dev/shm/visual_context_horizon/target/model-00002-of-00004.safetensors",
+    "/dev/shm/visual_context_horizon/target/model-00002-of-00004.safetensors.download.lock",
+    "/dev/shm/visual_context_horizon/target/model-00002-of-00004.safetensors.ranges.json",
+    "/dev/shm/visual_context_horizon/target/model-00003-of-00004.safetensors",
+    "/dev/shm/visual_context_horizon/target/model-00003-of-00004.safetensors.download.lock",
+    "/dev/shm/visual_context_horizon/target/model-00003-of-00004.safetensors.ranges.json",
+    "/dev/shm/visual_context_horizon/target/model-00004-of-00004.safetensors",
+    "/dev/shm/visual_context_horizon/target/model-00004-of-00004.safetensors.download.lock",
+    "/dev/shm/visual_context_horizon/target/model-00004-of-00004.safetensors.ranges.json",
+    "/dev/shm/visual_context_horizon/target/model.safetensors.index.json",
+    "/dev/shm/visual_context_horizon/target/preprocessor_config.json",
+    "/dev/shm/visual_context_horizon/target/tokenizer.json",
+    "/dev/shm/visual_context_horizon/target/tokenizer_config.json",
+    "/dev/shm/visual_context_horizon/target/video_preprocessor_config.json",
+    "/dev/shm/visual_context_horizon/target/vocab.json"
+  ],
+  "gpu_uuid": "GPU-14899bb2-cfa7-0cce-feb0-e42d8a26a01e",
+  "gpu_uuids": [
+    "GPU-14899bb2-cfa7-0cce-feb0-e42d8a26a01e"
+  ]
+}

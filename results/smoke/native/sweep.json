@@ -1,0 +1,109 @@
+{
+  "phase": "smoke",
+  "trace": "timing",
+  "dry_run": false,
+  "budgets": [
+    256,
+    1280
+  ],
+  "repeats": 1,
+  "samples": {
+    "chartqa:chartqa-augmented_test-001326": {
+      "id": "chartqa:chartqa-augmented_test-001326",
+      "dataset_id": "lmms-lab/ChartQA",
+      "dataset_split": "test",
+      "task": "chartqa",
+      "image": "/root/visual_context_horizon/data/chartqa/images/chartqa-augmented_test-001326.png",
+      "image_sha256": "f64a480b209ffac333e04f2d0381b1be6e83bc74ba5c74d339021ca4d053da4e",
+      "question": "What percentage of the national gross domestic product was China's gross national debt in 2019?\nAnswer the question using a single word or phrase.",
+      "answers": [
+        "57.05"
+      ],
+      "prompt_hash": "db7e896292395b5e6b72b0f3d5593fd6e50265c3ac329e8088ca5eae641f9de1"
+    },
+    "chartqa:chartqa-augmented_test-001346": {
+      "id": "chartqa:chartqa-augmented_test-001346",
+      "dataset_id": "lmms-lab/ChartQA",
+      "dataset_split": "test",
+      "task": "chartqa",
+      "image": "/root/visual_context_horizon/data/chartqa/images/chartqa-augmented_test-001346.png",
+      "image_sha256": "403e4e68d3b1d505cc94e5065da238d335804e40c2cc9843368cf22fde5e5c8c",
+      "question": "What percentage of the global software industry does database software account for?\nAnswer the question using a single word or phrase.",
+      "answers": [
+        "4.1"
+      ],
+      "prompt_hash": "ea878505dfde43bf3addc886edfd3eda8bd4c3fef9cd0a0c5d8571e013be4e12"
+    },
+    "long_form:coco-000000220310": {
+      "id": "long_form:coco-000000220310",
+      "dataset_id": "COCO 2017",
+      "dataset_split": "val2017",
+      "task": "long_form",
+      "image": "/root/visual_context_horizon/data/long_form/images/000000220310.jpg",
+      "image_sha256": "2969b052e6af353a963cad8139b95da53fb455235b80361c9a8eab2f66bd89ee",
+      "question": "Describe this image in detail. Describe the scene, the visible objects and people, their attributes, actions, spatial relationships, and the background. Ground your description in visible evidence and avoid speculation.",
+      "answers": null,
+      "prompt_hash": "b26dd8d4b6b53c220fc68e93a1ea33c66bf5af4e96542b254162255582e4b60a"
+    },
+    "long_form:coco-000000215778": {
+      "id": "long_form:coco-000000215778",
+      "dataset_id": "COCO 2017",
+      "dataset_split": "val2017",
+      "task": "long_form",
+      "image": "/root/visual_context_horizon/data/long_form/images/000000215778.jpg",
+      "image_sha256": "37486e1ac89a7860c4721892f3b56d8acde342a62dd211eba10a3128a9c1655c",
+      "question": "Describe this image in detail. Describe the scene, the visible objects and people, their attributes, actions, spatial relationships, and the background. Ground your description in visible evidence and avoid speculation.",
+      "answers": null,
+      "prompt_hash": "b26dd8d4b6b53c220fc68e93a1ea33c66bf5af4e96542b254162255582e4b60a"
+    },
+    "textvqa:textvqa-034624": {
+      "id": "textvqa:textvqa-034624",
+      "dataset_id": "lmms-lab/textvqa",
+      "dataset_split": "validation",
+      "task": "textvqa",
+      "image": "/root/visual_context_horizon/data/textvqa/images/textvqa-034624.jpg",
+      "image_sha256": "6c6c53a93c5019f656375e48ca15e71adec4cb7b3d0f25c1272b1ab2a3e51bcd",
+      "question": "what kind of comupter is this?\nAnswer the question using a single word or phrase.",
+      "answers": [
+        "macbook",
+        "macbook",
+        "macbook",
+        "macbook",
+        "macbook",
+        "macbook",
+        "macbook",
+        "macbook",
+        "macbook",
+        "macbook'"
+      ],
+      "prompt_hash": "7d5d43066b46f3e4781e5166f4d8ffc33b6990246c047f39c9a29385b595e2db"
+    },
+    "textvqa:textvqa-034638": {
+      "id": "textvqa:textvqa-034638",
+      "dataset_id": "lmms-lab/textvqa",
+      "dataset_split": "validation",
+      "task": "textvqa",
+      "image": "/root/visual_context_horizon/data/textvqa/images/textvqa-034638.jpg",
+      "image_sha256": "a7e073e81cedab1e56a0512b74c80e619a320fdb52d67bb39059c51e2b1cd96f",
+      "question": "whats the lowest number yard line that you can see?\nAnswer the question using a single word or phrase.",
+      "answers": [
+        "30",
+        "30",
+        "30",
+        "30",
+        "30",
+        "30",
+        "30",
+        "30",
+        "30",
+        "30"
+      ],
+      "prompt_hash": "686cf005bba9598d161578fa553b255e9b904107f7a18b48d292915c844e6ec0"
+    }
+  },
+  "workload_manifest_sha256": "49ecde2d289e735e83dd46068eb588bec2505c0749c36184a6b07f530c2366b4",
+  "config_sha256": "593af01dc17007f69bcaae6f61f121286d2a5c8520ef061fe06223bbda0aa96c",
+  "target_model_id": "Qwen/Qwen3-VL-8B-Instruct",
+  "drafter_model_id": "khazic/veladraft-qwen3vl8b-200k-dflash",
+  "drafter_checkpoint_sha256": "86b40b550dae022d8f8669302022c50aaf36441c6f36c1f0adde6628f5c6135c"
+}
