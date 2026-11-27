@@ -8,6 +8,7 @@ Pilot 从 14:47 开始，五档预算依次使用原生 AR 和 DFlash。正式�
 
 - 256 档共 360 对有效计时，E2E 加速 2.096×，token 一致 285/360。 [摘要](results/pilot-checkpoints/v256/summary.json) · [原始证据](results/pilot-checkpoints/v256/native-evidence.tar.gz)
 - 512 档共 360 对有效计时，E2E 加速 2.075×，token 一致 288/360。 [摘要](results/pilot-checkpoints/v512/summary.json) · [原始证据](results/pilot-checkpoints/v512/native-evidence.tar.gz)
+- 768 档共 360 对有效计时，E2E 加速 1.998×，token 一致 291/360。 [摘要](results/pilot-checkpoints/v768/summary.json) · [原始证据](results/pilot-checkpoints/v768/native-evidence.tar.gz)
 
 ## GPU 队列
 
