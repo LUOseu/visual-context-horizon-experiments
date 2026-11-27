@@ -1,0 +1,61 @@
+{
+  "format": "veladraft-native-vllm-e2e-v1",
+  "status": "complete",
+  "paper_ready": false,
+  "quality_evaluation_required": true,
+  "speedup_sum_ar_over_sd": 2.0753787162058117,
+  "ar_seconds": 441.33634932499996,
+  "sd_seconds": 212.65340435400003,
+  "ar_output_tokens": 35712,
+  "sd_output_tokens": 36105,
+  "timed_pairs": 360,
+  "exact_output_pairs": 288,
+  "all_measured_output_tokens_exact": false,
+  "terminations": {
+    "ar": {
+      "stop": 327,
+      "length": 33
+    },
+    "sd": {
+      "stop": 321,
+      "length": 39
+    }
+  },
+  "session_cluster_CI95": [
+    1.9556113093282106,
+    2.171312231779115
+  ],
+  "bootstrap_samples": 2000,
+  "bootstrap_seed": 42,
+  "confidence_interval_scope": "session clusters, fixed process sequence; not run/card/seed variance",
+  "repeats": 3,
+  "sessions": 120,
+  "smoke": false,
+  "evidence": "/root/visual_context_horizon/pilot-v1/v512.evidence",
+  "resource_evidence": {
+    "status": "complete",
+    "samples": 709,
+    "continuous_exclusivity_claim": false,
+    "gpu_uuids": [
+      "GPU-14899bb2-cfa7-0cce-feb0-e42d8a26a01e"
+    ],
+    "peak_memory_used_mib": {
+      "GPU-14899bb2-cfa7-0cce-feb0-e42d8a26a01e": 37297
+    },
+    "ownership_mode": "pid",
+    "max_own_apps_per_gpu": null,
+    "extra_app_samples_outside_timed": 0,
+    "began_wall_ns": 1795763608582626593,
+    "ended_wall_ns": 1795765056636936192
+  },
+  "scope": "steady-state batch1 image/RGB/template/prefill/decode/output E2E; startup and full warmup excluded",
+  "method": "dflash",
+  "implementation_scope": "Qwen3-VL-8B trained DFlash, interleaved spatial MRoPE, target head shared, public linear verifier",
+  "source_plan_sha256": "3ecf573e94ae3a8a2466bff550ab01cae0d1637bfc64d50f64a66712280b1253",
+  "source_preservation": {
+    "scope": "complete CPU checkpoint vs export; not GPU canonical parity",
+    "tensor_count": 36,
+    "all_values_bitwise_equal": true
+  },
+  "resources_verified": true
+}
