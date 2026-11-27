@@ -1,0 +1,58 @@
+A measurement is useful only when another laboratory can repeat it. The text in this
+file exists to give the text-control track a reproducible prompt whose length can be
+varied without any image, so that visual and textual context can be compared at the same
+token budget. It deliberately describes careful measurement rather than the subject of
+any benchmark question, because the control arm must not carry visual information.
+
+Each experiment begins with a written question. The question names the quantity to be
+observed, the hardware on which it will be observed, and the exact point in the pipeline
+where the observation begins and ends. A reader who did not run the experiment should be
+able to reconstruct the boundary from the question alone. If the boundary has to be
+inferred from a figure, the description is incomplete.
+
+The apparatus is described in the same order every time. The operating system, the Python
+version, the numerical libraries, the model revision, and the checkpoint checksum are
+recorded before the first request. Load time is reported separately from steady state.
+Compilation and graph capture are outside the timed region, and the warmup count is stated
+explicitly. Every request is repeated, and the repeats are paired so that a change in the
+machine affects both arms in the same way.
+
+Quantities are stated in the units in which they were measured. Wall time is reported in
+milliseconds. Token counts distinguish prompt tokens from generated tokens, and visual
+tokens are counted separately from textual tokens. Acceptance rates count accepted draft
+tokens and do not silently add a bonus token. A ratio of two wall times is reported with
+an interval, and the interval respects the grouping of repeated observations. A speedup
+without an interval is treated as a point estimate, not a conclusion.
+
+Failure is recorded, not hidden. If a configuration runs out of memory, the failure is
+written with the configuration that caused it. If a backend falls back to eager execution,
+the fallback is detected and reported. If an adapter cannot be installed, the affected
+cells are marked unsupported instead of being silently omitted. Missing data is visible in
+the table as missing data, never as zero.
+
+The samples are frozen before the first run. Each sample has a stable identifier, a
+source, a question, a reference answer when one exists, and a checksum for every input
+byte. Sampling uses a declared seed. Prompts are assembled by a deterministic template.
+The same sample is used for every arm, so differences between arms are not differences
+between samples. Multi-image samples name their frames in order, and the number of frames
+is part of the experimental factor.
+
+Resolution is part of the treatment. An image that cannot supply the requested number of
+visual tokens is not enlarged, because enlargement would invent detail rather than reveal
+it. Eligibility is checked before a cell runs, and the number of eligible samples is
+reported with the cell. High-resolution sources are chosen for high-resolution budgets so
+that the comparison remains a comparison of real pixels.
+
+The analysis keeps the paired structure. For each sample and each repeat, the autoregressive
+arm and the speculative arm share the same prompt, the same image, the same sampling
+parameters, and the same card. The ratio is formed inside the pair, then summaries are
+formed across samples. A boundary is reported only where the interval supports it. A trend
+across budgets is described as a trend, not as a law. The raw rows remain available so that
+a different summary can be computed without repeating the run.
+
+Reproducibility is not a claim that nothing will change. It is a promise that change is
+visible. Versions are pinned, bytes are hashed, commands are recorded, and the environment
+is written into the run directory. When a pinned artifact is unavailable, the run stops
+with a message that names the artifact. When a check cannot be performed on the available
+hardware, the check is marked deferred rather than passed. The result of the experiment is
+the evidence that was actually collected, together with a precise account of what was not.

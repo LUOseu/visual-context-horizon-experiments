@@ -1,0 +1,301 @@
+# Conflict 1: "When Is Vision Actually Overhead?"
+# Multimodal diffusion speculative decoding on 1 node x 8x A100 80GB.
+#
+# Single source of truth for the target, the seven VelaDraft parallel block
+# drafters, the workload slices, the experiment cells and the GPU lanes.
+# scripts/prepare_8gpu.sh freezes a resolved copy into every run directory;
+# later stages never re-read this file.
+#
+# ${NAME} and ${NAME:-default} expand from the environment at load time.
+# Never commit site paths or tokens.
+
+suite: vision-overhead-v1
+version: 1
+
+paths:
+  models: ${MODEL_ROOT:-./assets/models}
+  data: ${DATA_ROOT:-./assets/datasets}
+  cache: ${CACHE_DIR:-./assets/cache}
+  exports: ${OUT_ROOT:-./artifacts}/exports
+  manifests: ${OUT_ROOT:-./artifacts}/manifests
+  runs: ${OUT_ROOT:-./artifacts}/runs
+  logs: ${OUT_ROOT:-./artifacts}/logs
+  artifacts: ${OUT_ROOT:-./artifacts}
+
+environment:
+  python: "3.12.3"
+  torch: "2.11.0+cu130"
+  transformers: "5.11.0"
+  vllm: "0.22.1"
+  cuda: "13.0"
+  cuda_home: ${CUDA_HOME:-/usr/local/cuda-13.0}
+  veladraft_commit: e89526b30b028d396005a3ff045238d829d6c24a
+  runtime_lock: provenance/runtime_versions_8gpu.json
+  vllm_rejection_sampler_sha256: 0e2be02449692e8f4aea22c4637727e8d1fc296fb413e5407b1aa79419bf7b41
+  visual_kv_hook: methods/research/visual_context_horizon/matrix/visual_kv_hook.py
+
+targets:
+  qwen3vl_8b:
+    repo: Qwen/Qwen3-VL-8B-Instruct
+    revision: 0c351dd01ed87e9c1b53cbc748cba10e6187ff3b
+    path: ${MODEL_ROOT:-./assets/models}/Qwen3-VL-8B-Instruct
+    files_manifest: methods/research/visual_context_horizon/configs/target_files.json
+    download_manifest: methods/research/visual_context_horizon/configs/target_files.json
+    stop_token_ids: [151645, 151643]
+    vision_token_id: 151655
+    image_token_id: 151655
+    tensor_parallel_size: 1
+    drafters:
+      dflash:
+        repo: khazic/veladraft-qwen3vl8b-200k-dflash
+        revision: 37a5eb63b12d851fe6114f3aeb87dbc7174dec3d
+        checkpoint: ckpt/ckpt_final.pt
+        sha256: 86b40b550dae022d8f8669302022c50aaf36441c6f36c1f0adde6628f5c6135c
+        size: 1258375733
+        runnable: true
+        adapter:
+          root: research/qwen3vl8b_native_vllm/spatial_adapter
+          package: spatial_adapter
+          export: research/qwen3vl8b_native_vllm/spatial_adapter/export_checkpoint.py
+          bootstrap: research/qwen3vl8b_native_vllm/spatial_adapter/bootstrap.py
+          manifest: research/qwen3vl8b_native_vllm/dflash_runtime_manifest_v2.json
+          env: {}
+      dflash2:
+        repo: khazic/veladraft-qwen3vl8b-200k-dflash2
+        revision: def63d3a364adfc0ebac4af59955ddb392b4fa04
+        checkpoint: ckpt/ckpt_final.pt
+        sha256: 6d393b1482700e029f4b61753890c2d43d19a4cbc43e83586fd5a62a079f4571
+        size: 1466589685
+        runnable: true
+        adapter:
+          root: research/qwen3vl8b_native_vllm/dflash2_recovery_v2
+          package: dflash2_8b_native_adapter
+          export: research/qwen3vl8b_native_vllm/dflash2_recovery_v2/dflash2_8b_native_adapter/export_checkpoint.py
+          bootstrap: research/qwen3vl8b_native_vllm/dflash2_recovery_v2/dflash2_8b_native_adapter/bootstrap/sitecustomize.py
+          manifest: research/qwen3vl8b_native_vllm/dflash2_recovery_v2/runtime_manifest_recovery_v1.json
+          env: {DFLASH2_NATIVE_ENABLE: "1"}
+      dspark:
+        repo: khazic/veladraft-qwen3vl8b-200k-dspark
+        revision: 744db4cabb1c5d1b2f29f91a7da75882bc8f7820
+        checkpoint: ckpt/ckpt_final.pt
+        sha256: c9f31b764e42dfdc42bc8b1d9a3fb58ece179238275f5565fb6e3d5d365bf663
+        size: 1413969077
+        runnable: false
+        blocked: >-
+          VelaDraft e89526b ships no Qwen3-VL-8B DSpark native adapter
+          (research/qwen3vl8b_native_vllm/README.md: "A finished 8B DSpark
+          checkpoint and an 8B DSpark adapter are not included in this
+          snapshot"). The HF artifact itself is pinned and downloadable.
+        adapter: null
+      domino:
+        repo: khazic/veladraft-qwen3vl8b-200k-domino
+        revision: e85aad00bb83e1fbdcbf89e6f7c156e4ef944439
+        checkpoint: ckpt/ckpt_final.pt
+        sha256: f3fdfcd68f4eeb1aab74649c71c9cdb5c117f5c5822cf54b9c0f749b1dde85f7
+        size: 1370247413
+        runnable: false
+        blocked: >-
+          The Domino 8B bootstrap fails closed without DOMINO_FULL_PREFLIGHT.json
+          and a signed runtime-approval receipt, neither of which is bundled at
+          VelaDraft e89526b. Supply the receipts at the adapter root to enable.
+        adapter:
+          root: research/qwen3vl8b_native_vllm/domino_8b_work_20261029
+          package: domino_8b_native_adapter
+          export: research/qwen3vl8b_native_vllm/domino_8b_work_20261029/domino_8b_native_adapter/export_domino.py
+          bootstrap: research/qwen3vl8b_native_vllm/domino_8b_work_20261029/domino_8b_native_adapter/bootstrap/sitecustomize.py
+          manifest: research/qwen3vl8b_native_vllm/domino_8b_work_20261029/runtime_manifest_v2.json
+          env: {FAIR_DOMINO_ADAPTER: "1"}
+      jetspec:
+        repo: khazic/veladraft-qwen3vl8b-200k-jetspec
+        revision: 0163faebb15cbcc73c77c07230d06f82b9166f44
+        checkpoint: ckpt/ckpt_final.pt
+        sha256: afb8fdb1d14df3b3d003003fa12a30d29e2d6b08fa7cc45d24728be929437391
+        size: 1258375861
+        runnable: true
+        adapter:
+          root: research/qwen3vl8b_native_vllm/jetspec_8b_work_20261029
+          package: jetspec_adapter
+          export: research/qwen3vl8b_native_vllm/jetspec_8b_work_20261029/jetspec_adapter/export_jetspec.py
+          bootstrap: research/qwen3vl8b_native_vllm/jetspec_8b_work_20261029/jetspec_adapter/bootstrap/sitecustomize.py
+          manifest: research/qwen3vl8b_native_vllm/jetspec_8b_work_20261029/runtime_manifest_v3.json
+          env: {VLLM_OFFICIAL_JETSPEC_LOCAL_BLOCK_ADAPTER: "1"}
+      dflare:
+        repo: khazic/veladraft-qwen3vl8b-200k-dflare
+        revision: cbddc83e0aa38aff652102f52d0bfa6d08cc0eee
+        checkpoint: ckpt/ckpt_final.pt
+        sha256: cfdbcb9f4481d5e201d2aad78553ffc7eb54dbe61c50bf1da9f934dc950345af
+        size: 1208046581
+        runnable: true
+        adapter:
+          root: research/qwen3vl8b_native_vllm/dflare_8b_work_20261029
+          package: dflare_8b_native_adapter
+          export: research/qwen3vl8b_native_vllm/dflare_8b_work_20261029/dflare_8b_native_adapter/export_checkpoint.py
+          bootstrap: research/qwen3vl8b_native_vllm/dflare_8b_work_20261029/dflare_8b_native_adapter/bootstrap/sitecustomize.py
+          manifest: research/qwen3vl8b_native_vllm/dflare_8b_work_20261029/runtime_manifest_v1.json
+          env: {DFLARE_NATIVE_ENABLE: "1"}
+      dfly:
+        repo: khazic/veladraft-qwen3vl8b-200k-dfly
+        revision: 24331eae8ac5dbe0f12390aa32c92f4e7efec5ab
+        checkpoint: ckpt/ckpt_final.pt
+        sha256: 39ae6a7db1cc8b9920e7703ef0db80149c0eac27ca682864e94ac4e3348ba919
+        size: 1426167349
+        runnable: true
+        adapter:
+          root: research/qwen3vl8b_native_vllm/dfly_recovery_v2
+          package: dfly_native_adapter_v1
+          export: research/qwen3vl8b_native_vllm/dfly_recovery_v2/dfly_native_adapter_v1/export_checkpoint.py
+          bootstrap: research/qwen3vl8b_native_vllm/dfly_recovery_v2/dfly_native_adapter_v1/bootstrap/sitecustomize.py
+          manifest: research/qwen3vl8b_native_vllm/dfly_recovery_v2/runtime_manifest_v2.json
+          env: {DFLY_NATIVE_ENABLE: "1"}
+
+matrix:
+  methods: [ar, dflash, dflash2, dspark, domino, jetspec, dflare, dfly]
+  draft_methods: [dflash, dflash2, dspark, domino, jetspec, dflare, dfly]
+  spec_method: dflash
+
+engine:
+  dtype: bfloat16
+  tensor_parallel_size: 1
+  max_model_len: 24576
+  max_new_tokens: 512
+  gpu_memory_utilization: 0.92
+  max_num_batched_tokens: 4096
+  max_num_batched_tokens_by_batch: {1: 4096, 4: 8192, 8: 16384, 16: 32768, 32: 32768, 64: 32768}
+  enable_chunked_prefill: true
+  attention_backend: FLASH_ATTN
+  cudagraph_mode: PIECEWISE
+  seed: 42
+  temperature: 0.0
+  mm_processor_cache_gb: 0
+  min_pixels_floor: 65536
+  max_pixels_cap: 16777216
+  pixel_floor_ratio: 0.85
+  patch_size: 16
+  spatial_merge_size: 2
+  telemetry_interval_s: 5
+  warmup_requests_per_cell: 3
+  profile_keep_traces: 1
+  topk_logprobs: 5
+  visual_kv_modes: [full, keep_50, keep_25, drop_all]
+  visual_kv_env: VCH_DRAFTER_VISUAL_KV_MODE
+  visual_kv_strict: true
+
+protocol:
+  repeats: 3
+  block_widths: [4, 8, 16]
+  block_width_to_spec_tokens: {4: 3, 8: 7, 16: 15}
+  drop_warmups: 3
+  alternate_arms: true
+  clear_kv_between_cells: true
+  token_match: [0.0, 0.0]
+  bootstrap_ci_samples: 2000
+  bootstrap_seed: 42
+
+workloads:
+  seed: 42
+  budgets: [256, 512, 1024, 2048, 4096, 8192, 16384]
+  per_task: 100
+  # task -> (track, dataset key in the manifest, budgets, frames)
+  tasks:
+    textvqa:       {track: single_img, dataset: textvqa, core: true}
+    docvqa:        {track: single_img, dataset: docvqa, core: true}
+    chartqa:       {track: single_img, dataset: chartqa, core: true}
+    vqav2:         {track: single_img, dataset: general_vqa, core: true}
+    coco_long_form: {track: single_img, dataset: long_form, core: true}
+    mathvista:     {track: single_img, dataset: mathvista, core: true, optional_data: true}
+    hrbench:       {track: single_img, dataset: hrbench, core: true, budgets: [256, 512, 1024, 2048, 4096]}
+    mp_docvqa:     {track: multi_frame, dataset: mp_docvqa, core: true, frames: [8, 16], budgets: [2048, 4096, 8192, 16384]}
+    video_mme:     {track: multi_frame, dataset: video_mme, core: true, frames: [8, 16, 32, 64], budgets: [2048, 4096, 8192, 16384]}
+    ocrbench:      {track: single_img, dataset: ocrbench, bonus: true, optional_data: true}
+    infovqa:       {track: single_img, dataset: infovqa, bonus: true, optional_data: true}
+  high_res: {4k: 50, 8k: 50}
+  docs: {questions: 50}
+  video: {clips: 50, frames: 64}
+  controlled_horizon: {images: 100}
+  text_control: {prompts: 20, token_targets: [256, 512, 1024, 2048, 4096, 8192, 16384]}
+  text_corpus: workloads/text_corpus.txt
+  manifest_name: workloads_manifest.json
+
+experiments:
+  exp1_visual:
+    enabled: true
+    description: "7 drafters x 9 visual tasks x C_v sweep + text control"
+    tasks: [textvqa, docvqa, chartqa, vqav2, coco_long_form, mathvista, hrbench, mp_docvqa, video_mme]
+    include_text_control: true
+    budgets: [256, 512, 1024, 2048, 4096, 8192, 16384]
+    samples: 24
+    repeats: 3
+  exp2_visual_kv:
+    enabled: true
+    description: "Inference-time drafter visual KV ablation; target always verifies with full vision"
+    tasks: [textvqa, docvqa, chartqa, vqav2, coco_long_form, mathvista, hrbench, mp_docvqa, video_mme]
+    budgets: [512, 2048, 8192]
+    modes: [full, keep_50, keep_25, drop_all]
+    samples: 24
+    repeats: 3
+  exp3_concurrency:
+    enabled: true
+    description: "True batched serving BS sweep plus the rescue slice"
+    tasks: [textvqa, docvqa, chartqa, hrbench, mp_docvqa, video_mme]
+    budgets: [512, 2048, 8192]
+    batch_sizes: [1, 4, 8, 16, 32, 64]
+    rescue: {batch_sizes: [16, 64], modes: [keep_25, drop_all], methods: [dflash, dflash2, dspark, dflare]}
+    samples: 24
+    repeats: 3
+  exp4_profile:
+    enabled: true
+    description: "Isolated six-stage CUDA-event profiling, never synchronised inside Exp1-3"
+    tasks: [textvqa, hrbench, mp_docvqa, video_mme]
+    budgets: [256, 512, 1024, 2048, 4096, 8192, 16384]
+    batch_sizes: [1, 8, 32]
+    samples: 32
+    repeats: 1
+    stages: [vit, target_prefill, visual_conditioning, draft, verify, resync_host]
+  exp5_bonus:
+    enabled: true
+    description: "OCRBench + InfoVQA, APC on/off, block-width sensitivity"
+    tasks: [ocrbench, infovqa]
+    budgets: [512, 2048, 8192]
+    apc: {tasks: [docvqa], budgets: [512, 2048, 8192]}
+    block_widths: {widths: [4, 8, 16], budgets: [512, 4096, 8192]}
+    samples: 24
+    repeats: 3
+
+waves:
+  wave0_smoke:
+    description: "2 drafters x HR-Bench C_v 256/16384 x full/drop_all: lossless check, graphs, schema"
+    lanes:
+      - {gpus: [0], experiments: [exp1_visual], methods: [ar, dflash, dflash2]}
+      - {gpus: [1], experiments: [exp1_visual], methods: [dfly]}
+      - {gpus: [2], experiments: [exp2_visual_kv], methods: [ar, dflash]}
+    targets: [qwen3vl_8b]
+    # HR-Bench 8K samples reach the 16384 budget without upscaling; TextVQA
+    # would be pruned above ~1k tokens.
+    tasks: [hrbench]
+    budgets: [256, 16384]
+    modes: [full, drop_all]
+    samples_per_cell: 2
+    repeats: 1
+    batch_sizes: [16, 64]
+    require_token_match: true
+  wave1_main:
+    description: "8 TP=1 lanes with the fixed Exp1-Exp4 mapping"
+    lanes:
+      - {gpus: [0], experiments: [exp1_visual], methods: [ar, dflash]}
+      - {gpus: [1], experiments: [exp1_visual], methods: [dflash2, dspark]}
+      - {gpus: [2], experiments: [exp1_visual], methods: [domino, jetspec]}
+      - {gpus: [3], experiments: [exp1_visual], methods: [dflare, dfly]}
+      - {gpus: [4], experiments: [exp2_visual_kv], methods: [ar, dflash, dflash2]}
+      - {gpus: [5], experiments: [exp2_visual_kv], methods: [ar, dspark, dflare]}
+      - {gpus: [6], experiments: [exp3_concurrency], methods: [ar, dflash, dflash2, dspark, domino, jetspec, dflare, dfly]}
+      - {gpus: [7], experiments: [exp4_profile], methods: [ar, dflash, dflash2, dspark, domino, jetspec, dflare, dfly]}
+    targets: [qwen3vl_8b]
+  wave2_bonus:
+    description: "OCRBench + InfoVQA, APC on/off, block widths; balanced over 8 GPUs"
+    experiments: [exp5_bonus]
+    targets: [qwen3vl_8b]
+    gpus: [0, 1, 2, 3, 4, 5, 6, 7]
+
+guardrails:
+  per_cell_oom: record_oom_free_and_continue
+  max_num_batched_tokens_by_batch: {1: 4096, 4: 8192, 8: 16384, 16: 32768, 32: 32768, 64: 32768}

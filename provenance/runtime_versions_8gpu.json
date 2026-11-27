@@ -1,0 +1,33 @@
+{
+  "suite": "vision-overhead-v1",
+  "python": "3.12.3",
+  "torch": "2.11.0+cu130",
+  "transformers": "5.11.0",
+  "vllm": "0.22.1",
+  "cuda": "13.0",
+  "cuda_home": "/usr/local/cuda-13.0",
+  "pyyaml": ">=6",
+  "pillow": ">=10",
+  "numpy": ">=1.26",
+  "safetensors": ">=0.4",
+  "huggingface_hub": ">=0.30",
+  "os": "Linux x86_64, glibc >= 2.35",
+  "gpu": "1 node x 8 x A100 80GB, TP=1 per lane",
+  "veladraft_repo": "https://github.com/LUOseu/VelaDraft.git",
+  "veladraft_commit": "e89526b30b028d396005a3ff045238d829d6c24a",
+  "vllm_rejection_sampler_sha256": "0e2be02449692e8f4aea22c4637727e8d1fc296fb413e5407b1aa79419bf7b41",
+  "visual_kv_hook": "methods/research/visual_context_horizon/matrix/visual_kv_hook.py",
+  "visual_kv_hook_sha256": "c95f6b341e35abaf33c7ef656a88c4f554588ea14e3bb6d0526ef44d691e0d8d",
+  "native_protocol": "vLLM native speculative decoding; greedy verification; fresh engine per stage; target always verifies with full vision",
+  "drafter_visual_kv_modes": ["full", "keep_50", "keep_25", "drop_all"],
+  "blocked_drafters": {
+    "dspark": "VelaDraft e89526b ships no Qwen3-VL-8B DSpark native adapter",
+    "domino": "Domino 8B bootstrap requires DOMINO_FULL_PREFLIGHT.json and a signed runtime-approval receipt; neither is bundled"
+  },
+  "notes": [
+    "vLLM 0.22.1 is used with the pinned rejection sampler; the only source patch is the drafter visual-KV hook.",
+    "The visual-KV hook is methods/research/visual_context_horizon/matrix/visual_kv_hook.py; its SHA256 is recorded in artifacts/manifests/runtime_manifest.json.",
+    "Exp1-Exp3 never call torch.cuda.synchronize; Exp4 profiling runs in a separate stage process.",
+    "Engine startup, compilation and the three warmup requests per cell are excluded from timed requests."
+  ]
+}
