@@ -30,7 +30,7 @@
 6f6fc1aef8be99a550d280161acc255cf4a7f68e8a4fa12cbd1cb2f236f03548  ./results/smoke/native/v256.evidence/ar_r0.log
 74366e381f4dbc5f568449cd22239a8fade5ffa3df09930947442f60be28bef2  ./data/qa/chartqa/manifest.json
 7936925bd53ea2844d8e98f34167f7d4695e5ff27ce7df570a7019d5b2d5c43b  ./results/smoke/summary.csv
-7d684d3f1ada3ac688ea9a735b15fd51bb16a74bc803442b01157cc23ed43efb  ./data/qa/docvqa/manifest.json
+ebcf865de7a01f63125dfc07c92f0261cce818825fb65dde4a23fa97dee91e39  ./data/qa/docvqa/manifest.json
 7dc9ef249ef03fa7ebaa6250ed8c9a85bedbc6aee646693f5d5f1b418ec230c5  ./results/smoke/native/v256.json
 7e47c9cd20d99f2c83cea1c8a42217e5c824dd44bddbf03b32499cb6882d8028  ./results/smoke/native/v1280.evidence/plan.json
 80b4ad8d30e65498458a02191415ea467f05fd97284ccaf073172912d4f3139d  ./results/smoke/native/v1280.json
