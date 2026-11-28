@@ -3,7 +3,7 @@
   "revision": "539088ef8a8ada01ac8e2e6d4e372586748a265e",
   "folder": "DocVQA",
   "split": "validation",
-  "num_rows_in_split": 10537,
+  "num_rows_in_split": 5349,
   "shards": {
     "validation-00000-of-00006.parquet": "a31507f0b700ac64f3ead52057c5dc3ccfb0baadcc62bc0d19d17159f080a4d8",
     "validation-00001-of-00006.parquet": "ce63ba45f11bfb4e17362f9c073984b4c6c84a0e966ba3d33a86fa285a1fb3dc",
